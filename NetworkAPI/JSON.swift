@@ -64,6 +64,24 @@ extension JSONObject {
     
 }
 
+public protocol JSONValue: APIResponseDecodable {}
+
+extension JSONValue {
+    public init?(apiResponseData: NSData) throws {
+        guard let result: AnyObject = try apiResponseData.decodeToJSON() else {
+            return nil
+        }
+        if let result = result as? Self {
+            self = result
+        }
+        else {
+            return nil
+        }
+    }
+}
+
+extension String: JSONValue {}
+
 extension JSONArray {
     
     public init?(apiResponseData: NSData) throws {
@@ -129,7 +147,11 @@ extension NSData {
     public func decodeToJSON() throws -> JSONDictionary? {
         return try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions()) as? JSONDictionary
     }
-    
+
+    public func decodeToJSON() throws -> AnyObject? {
+        return try NSJSONSerialization.JSONObjectWithData(self, options: [.AllowFragments])
+    }
+
     public func decodeToJSON() throws -> [JSONDictionary]? {
         return try NSJSONSerialization.JSONObjectWithData(self, options: NSJSONReadingOptions()) as? [JSONDictionary]
     }

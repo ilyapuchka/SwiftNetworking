@@ -23,16 +23,35 @@ public protocol Endpoint {
 
 public typealias MIMEType = String
 
-public struct HTTPContentType {
-    public static let JSON: MIMEType = "application/json"
-    public static let form: MIMEType = "application/x-www-form-urlencoded"
+public enum HTTPContentType: RawRepresentable {
+
+    case JSON
+    case form
+    case multipart(String)
+
+    public typealias RawValue = MIMEType
+    
+    public init?(rawValue: HTTPContentType.RawValue) {
+        switch rawValue {
+        case "application/json": self = .JSON
+        default: return nil
+        }
+    }
+    
+    public var rawValue: HTTPContentType.RawValue {
+        switch self {
+        case .JSON: return "application/json"
+        case .form: return "application/x-www-form-urlencoded"
+        case .multipart(let boundary): return "multipart/form-data; boundary=\(boundary)"
+        }
+    }
 }
 
-public enum HTTPHeader {
+public enum HTTPHeader: Equatable {
     
     case ContentDisposition(String)
-    case Accept([MIMEType])
-    case ContentType(MIMEType)
+    case Accept([HTTPContentType])
+    case ContentType(HTTPContentType)
     case Authorization(AccessToken)
     case Custom(String, String)
     
@@ -56,9 +75,10 @@ public enum HTTPHeader {
         case .ContentDisposition(let disposition):
             return disposition
         case .Accept(let types):
-            return ", ".join(types)
+            let typeStrings = types.0.map({$0.rawValue})
+            return ", ".join(typeStrings)
         case .ContentType(let type):
-            return type
+            return type.0.rawValue
         case .Authorization(let token):
             return token.requestHeaderValue
         case .Custom(_, let value):
@@ -69,6 +89,12 @@ public enum HTTPHeader {
     public func setRequestHeader(request: NSMutableURLRequest) {
         request.setValue(requestHeaderValue, forHTTPHeaderField: key)
     }
+}
+
+//MARK: - Equatable
+
+public func ==(lhs: HTTPHeader, rhs: HTTPHeader) -> Bool {
+    return lhs.key == rhs.key && lhs.requestHeaderValue == rhs.requestHeaderValue
 }
 
 public protocol APIRequestDataEncodable {
@@ -114,5 +140,14 @@ public struct APIRequestFor<ResultType: APIResponseDecodable>: APIRequestType {
         self.headers = headers
         self.body = try input.encodeForAPIRequestData()
     }
+    
+    public init(endpoint: Endpoint, baseURL: NSURL, body: NSData, query: APIRequestQuery = APIRequestQuery(), headers: [HTTPHeader] = []) {
+        self.endpoint = endpoint
+        self.baseURL = baseURL
+        self.query = query
+        self.headers = headers
+        self.body = body
+    }
+
 }
 

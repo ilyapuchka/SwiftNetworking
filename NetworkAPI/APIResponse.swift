@@ -14,7 +14,7 @@ public protocol APIResponse {
     var data: NSData? {get}
     var error: ErrorType? {get}
     var originalRequest: NSURLRequest? {get}
-    var contentType: MIMEType? {get}
+    var contentType: HTTPContentType? {get}
     
 }
 
@@ -38,9 +38,9 @@ public struct APIResponseOf<ResultType: APIResponseDecodable>: APIResponse {
         self.init(request: r.request, data: r.data, httpResponse: r.httpResponse, error: r.error)
     }
     
-    public var contentType: MIMEType? {
+    public var contentType: HTTPContentType? {
         get {
-            return httpResponse?.MIMEType
+            return httpResponse?.MIMEType.flatMap {HTTPContentType(rawValue: $0)}
         }
     }
 }

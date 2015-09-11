@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct AccessToken: JSONDecodable, APIResponseDecodable, CustomStringConvertible {
+public struct AccessToken: JSONDecodable, APIResponseDecodable, CustomStringConvertible, Equatable {
     public let type: String
     public let token: String
     public let refresh: String!
@@ -35,6 +35,10 @@ public struct AccessToken: JSONDecodable, APIResponseDecodable, CustomStringConv
         return AccessToken(type: refreshedToken.type, token: refreshedToken.token, refresh: self.refresh, expires: refreshedToken.expires)
     }
     
+}
+
+public func ==(lhs: AccessToken, rhs: AccessToken) -> Bool {
+    return lhs.type == rhs.type && lhs.token == rhs.token && lhs.refresh == rhs.refresh && lhs.expires == rhs.expires
 }
 
 //MARK: - CustomStringConvertible
