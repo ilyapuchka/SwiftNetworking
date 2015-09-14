@@ -1,6 +1,6 @@
 //
 //  NSData+Multipart.swift
-//  NetworkAPI
+//  SwiftNetworking
 //
 //  Created by Ilya Puchka on 11.09.15.
 //  Copyright © 2015 Ilya Puchka. All rights reserved.

@@ -1,6 +1,6 @@
 //
 //  AccessToken.swift
-//  Ghost
+//  SwiftNetworking
 //
 //  Created by Ilya Puchka on 22.08.15.
 //  Copyright © 2015 Ilya Puchka. All rights reserved.

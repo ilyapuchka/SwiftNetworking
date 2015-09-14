@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "099E89AA1B89BD0E005972F0"
-               BuildableName = "NetworkAPI.framework"
-               BlueprintName = "NetworkAPI"
-               ReferencedContainer = "container:NetworkAPI.xcodeproj">
+               BuildableName = "SwiftNetworking.framework"
+               BlueprintName = "SwiftNetworking"
+               ReferencedContainer = "container:SwiftNetworking.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "099E89B41B89BD0E005972F0"
-               BuildableName = "NetworkAPITests.xctest"
-               BlueprintName = "NetworkAPITests"
-               ReferencedContainer = "container:NetworkAPI.xcodeproj">
+               BuildableName = "SwiftNetworkingTests.xctest"
+               BlueprintName = "SwiftNetworkingTests"
+               ReferencedContainer = "container:SwiftNetworking.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -43,9 +43,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "099E89AA1B89BD0E005972F0"
-            BuildableName = "NetworkAPI.framework"
-            BlueprintName = "NetworkAPI"
-            ReferencedContainer = "container:NetworkAPI.xcodeproj">
+            BuildableName = "SwiftNetworking.framework"
+            BlueprintName = "SwiftNetworking"
+            ReferencedContainer = "container:SwiftNetworking.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -65,9 +65,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "099E89AA1B89BD0E005972F0"
-            BuildableName = "NetworkAPI.framework"
-            BlueprintName = "NetworkAPI"
-            ReferencedContainer = "container:NetworkAPI.xcodeproj">
+            BuildableName = "SwiftNetworking.framework"
+            BlueprintName = "SwiftNetworking"
+            ReferencedContainer = "container:SwiftNetworking.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -83,9 +83,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "099E89AA1B89BD0E005972F0"
-            BuildableName = "NetworkAPI.framework"
-            BlueprintName = "NetworkAPI"
-            ReferencedContainer = "container:NetworkAPI.xcodeproj">
+            BuildableName = "SwiftNetworking.framework"
+            BlueprintName = "SwiftNetworking"
+            ReferencedContainer = "container:SwiftNetworking.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

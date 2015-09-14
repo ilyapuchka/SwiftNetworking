@@ -1,13 +1,13 @@
 //
 //  NSDataMultipartTests.swift
-//  NetworkAPI
+//  SwiftNetworking
 //
 //  Created by Ilya Puchka on 12.09.15.
 //  Copyright © 2015 Ilya Puchka. All rights reserved.
 //
 
 import XCTest
-@testable import NetworkAPI
+@testable import SwiftNetworking
 
 class NSDataMultipartTests: XCTestCase {
 

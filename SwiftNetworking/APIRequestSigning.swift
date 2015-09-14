@@ -1,6 +1,6 @@
 //
 //  APIRequestSigning.swift
-//  Ghost
+//  SwiftNetworking
 //
 //  Created by Ilya Puchka on 16.08.15.
 //  Copyright © 2015 Ilya Puchka. All rights reserved.

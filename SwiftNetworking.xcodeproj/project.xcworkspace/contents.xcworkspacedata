@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:NetworkAPI.xcodeproj">
+      location = "self:/Users/ilya/Documents/Developer/iPhoneProjects/NetworkAPI/SwiftNetworking.xcodeproj">
    </FileRef>
 </Workspace>

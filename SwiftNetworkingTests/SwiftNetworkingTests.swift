@@ -1,6 +1,6 @@
 //
-//  NetworkAPITests.swift
-//  NetworkAPITests
+//  SwiftNetworkingTests.swift
+//  SwiftNetworkingTests
 //
 //  Created by Ilya Puchka on 23.08.15.
 //  Copyright © 2015 Ilya Puchka. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class NetworkAPITests: XCTestCase {
+class SwiftNetworkingTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
