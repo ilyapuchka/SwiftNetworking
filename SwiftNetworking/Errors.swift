@@ -36,14 +36,24 @@ extension NSError {
     static func backendError(statusCode: Int, data: NSData?) -> ErrorType? {
         switch statusCode {
         case 200..<300: return nil
-        case 401: return NSError(code: .Unauthorized)
+        case 401:
+            return NSError(code: .Unauthorized, userInfo: backendErrorUserInfo(statusCode, data: data))
         default:
-            var userInfo: [NSObject: AnyObject] = ["statusCode": statusCode]
-            if let data = data, string = NSString(data: data, encoding: NSUTF8StringEncoding) {
-                userInfo["response"] = string
-            }
-            return NSError(code: .BackendError, userInfo: userInfo)
+            return NSError(code: .BackendError, userInfo: backendErrorUserInfo(statusCode, data: data))
         }
+    }
+    
+    static func backendErrorUserInfo(statusCode: Int, data: NSData?) -> [NSObject: AnyObject]? {
+        var userInfo: [NSObject: AnyObject] = ["statusCode": statusCode]
+        if let data = data {
+            do {
+                userInfo["response"] = try NSJSONSerialization.JSONObjectWithData(data, options: [.AllowFragments])
+            }
+            catch {
+                userInfo["response"] = NSString(data: data, encoding: NSUTF8StringEncoding)
+            }
+        }
+        return userInfo
     }
 }
 
