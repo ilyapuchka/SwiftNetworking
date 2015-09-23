@@ -75,10 +75,10 @@ public enum HTTPHeader: Equatable {
         case .ContentDisposition(let disposition):
             return disposition
         case .Accept(let types):
-            let typeStrings = types.0.map({$0.rawValue})
-            return ", ".join(typeStrings)
+            let typeStrings = types.map({$0.rawValue})
+            return typeStrings.joinWithSeparator(", ")
         case .ContentType(let type):
-            return type.0.rawValue
+            return type.rawValue
         case .Authorization(let token):
             return token.requestHeaderValue
         case .Custom(_, let value):

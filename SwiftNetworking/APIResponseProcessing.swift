@@ -56,7 +56,7 @@ public class DefaultAPIResponseProcessing: APIResponseProcessing {
     final private func validateContentType<ResultType>(response: APIResponseOf<ResultType>, request: APIRequestFor<ResultType>) throws {
         if let contentType = response.contentType {
             for case let .Accept(acceptable) in request.headers {
-                if !acceptable.0.contains({ $0.0 == contentType }) {
+                if !acceptable.contains({ $0 == contentType }) {
                     throw NSError(code: .InvalidResponse)
                 }
             }
