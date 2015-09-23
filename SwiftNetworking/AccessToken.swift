@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct AccessToken: JSONDecodable, APIResponseDecodable, CustomStringConvertible, Equatable {
+public struct AccessToken: JSONDecodable, JSONEncodable, APIResponseDecodable, CustomStringConvertible, Equatable {
     public let type: String
     public let token: String
     public let refresh: String!
@@ -68,6 +68,19 @@ extension AccessToken {
         }
         let refresh = jsonDictionary[Keys.refresh] as? String
         self.init(type: type, token: token, refresh: refresh, expires: NSDate(timeIntervalSinceNow: expires))
+    }
+}
+
+//MARK: - JSONEncodable
+extension AccessToken {
+    
+    public var jsonDictionary: JSONDictionary {
+        return [
+            Keys.type: type,
+            Keys.token: token,
+            Keys.refresh: refresh,
+            Keys.expires: expires.timeIntervalSince1970
+        ]
     }
 }
 
