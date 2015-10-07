@@ -15,7 +15,7 @@ public protocol JSONDecodable {
 }
 
 public protocol JSONArrayConvertible: JSONDecodable, JSONEncodable {
-    static var jsonArrayRootKey: String {get}
+    static var jsonArrayRootKey: String? {get}
 }
 
 public protocol JSONEncodable {
@@ -95,11 +95,21 @@ extension JSONArray {
 extension JSONArrayOf {
     
     public init?(apiResponseData: NSData) throws {
-        guard let jsonDictionary: JSONDictionary = try apiResponseData.decodeToJSON(),
-            posts = jsonDictionary[T.jsonArrayRootKey] as? [JSONDictionary] else {
-                return nil
+        var array: [JSONDictionary]
+        if let key = T.jsonArrayRootKey {
+            guard let jsonDictionary: JSONDictionary = try apiResponseData.decodeToJSON(),
+                jsonArray = jsonDictionary[key] as? [JSONDictionary] else {
+                    return nil
+            }
+            array = jsonArray
         }
-        self = JSONArrayOf<T>(posts.flatMap { T(jsonDictionary: $0) })
+        else {
+            guard let jsonArray: [JSONDictionary] = try apiResponseData.decodeToJSON() else {
+                    return nil
+            }
+            array = jsonArray
+        }
+        self = JSONArrayOf<T>(array.flatMap { T(jsonDictionary: $0) })
     }
 }
 
@@ -120,7 +130,12 @@ extension JSONArray {
 
 extension JSONArrayOf {
     public func encodeForAPIRequestData() throws -> NSData {
-        return try encodeJSONDictionary([T.jsonArrayRootKey: value.map({$0.jsonDictionary})])
+        if let key = T.jsonArrayRootKey {
+            return try encodeJSONDictionary([key: value.map({$0.jsonDictionary})])
+        }
+        else {
+            return try encodeJSONArray(value.map({$0.jsonDictionary}))
+        }
     }
 }
 

@@ -61,9 +61,13 @@ struct PaginationKeys {
 extension PaginationOf {
     
     public init?(jsonDictionary: JSONDictionary?) {
+        guard let _ = T.jsonArrayRootKey else {
+            fatalError("PaginationOf can use created only on types that return not nil from 'jsonArrayRootKey'")
+        }
+        
         guard let
             jsonDictionary = jsonDictionary,
-            itemsArray = jsonDictionary[T.jsonArrayRootKey].array,
+            itemsArray = jsonDictionary[T.jsonArrayRootKey!].array,
             meta = jsonDictionary[PaginationKeys.meta].dict,
             pagination = meta[PaginationKeys.pagination].dict,
             page = pagination[PaginationKeys.page].int,
