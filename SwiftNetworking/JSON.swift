@@ -15,7 +15,13 @@ public protocol JSONDecodable {
 }
 
 public protocol JSONArrayConvertible: JSONDecodable, JSONEncodable {
-    static var jsonArrayRootKey: String? {get}
+    static var jsonArrayRootKey: String? { get }
+    static var paginationMetadataKey: String? { get }
+}
+
+extension JSONArrayConvertible {
+    static var jsonArrayRootKey: String? { return nil }
+    static var paginationMetadataKey: String? { return nil }
 }
 
 public protocol JSONEncodable {

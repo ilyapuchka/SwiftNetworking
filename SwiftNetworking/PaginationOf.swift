@@ -8,39 +8,38 @@
 
 import Foundation
 
-public struct PaginationOf<T: JSONArrayConvertible>: JSONDecodable, APIResponseDecodable {
-    public let items: [T]
-    public let page: Int
-    public let limit: Int
-    public let pages: Int
-    public let total: Int
-    public let next: Int?
-    public let prev: Int?
+public protocol PaginationMetadata: JSONDecodable {
+    var page: Int {get}
+    var limit: Int {get}
+
+    init(page: Int, limit: Int)
+    func nextPage() -> Self?
+    func prevPage() -> Self?
+}
+
+public struct PaginationOf<T: JSONArrayConvertible, M: PaginationMetadata>: JSONDecodable, APIResponseDecodable {
+    public var items: [T]
+    public var pagination: PaginationMetadata?
     
-    private init(items:[T] = [], page: Int, limit: Int, pages: Int, total: Int, next: Int? = nil, prev: Int? = nil) {
+    private init(items: [T] = [], pagination: PaginationMetadata?) {
         self.items = items
-        self.page = page
-        self.pages = pages
-        self.limit = limit
-        self.total = total
-        self.next = next
-        self.prev = prev
+        self.pagination = pagination
     }
     
     public init(page: Int, limit: Int) {
-        self.init(page: page, limit: limit, pages: 0, total: 0)
+        self.init(pagination: M(page: page, limit: limit))
     }
     
-    public func nextPage() -> PaginationOf<T>? {
-        if let next = next {
-            return PaginationOf<T>(page: next, limit: limit, pages: pages, total: total)
+    public func nextPage() -> PaginationOf<T, M>? {
+        if let nextPage = pagination?.nextPage() {
+            return PaginationOf<T, M>(pagination: nextPage)
         }
         return nil
     }
     
-    public func prevPage() -> PaginationOf<T>? {
-        if let prev = prev {
-            return PaginationOf<T>(page: prev, limit: limit, pages: pages, total: total)
+    public func prevPage() -> PaginationOf<T, M>? {
+        if let prevPage = pagination?.prevPage() {
+            return PaginationOf<T, M>(pagination: prevPage)
         }
         return nil
     }
@@ -62,26 +61,24 @@ extension PaginationOf {
     
     public init?(jsonDictionary: JSONDictionary?) {
         guard let _ = T.jsonArrayRootKey else {
-            fatalError("PaginationOf can use created only on types that return not nil from 'jsonArrayRootKey'")
+            fatalError("\(T.self) can not be used in PaginationOf as it returns nil from jsonArrayRootKey.")
+        }
+        guard let _ = T.paginationMetadataKey else {
+            fatalError("\(T.self) can not be used in PaginationOf as it returns nil from paginationMetadataKey.")
         }
         
         guard let
             jsonDictionary = jsonDictionary,
             itemsArray = jsonDictionary[T.jsonArrayRootKey!].array,
-            meta = jsonDictionary[PaginationKeys.meta].dict,
-            pagination = meta[PaginationKeys.pagination].dict,
-            page = pagination[PaginationKeys.page].int,
-            limit = pagination[PaginationKeys.limit].int,
-            pages = pagination[PaginationKeys.pages].int,
-            total = pagination[PaginationKeys.total].int else
+            paginationMetadata = jsonDictionary[T.paginationMetadataKey!].dict
+            else
         {
             return nil
         }
         
-        let next = jsonDictionary[PaginationKeys.next].int
-        let prev = jsonDictionary[PaginationKeys.prev].int
         let items = itemsArray.flatMap {T(jsonDictionary: $0)}
-        self.init(items: items, page: page, limit: limit, pages: pages, total: total, next: next, prev: prev)
+        let pagination = M(jsonDictionary: paginationMetadata)
+        self.init(items: items, pagination: pagination)
     }
 }
 
