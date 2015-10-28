@@ -12,6 +12,21 @@ public protocol APIRequestProcessing {
     func processRequest(request: APIRequestType) throws -> NSMutableURLRequest
 }
 
+public func percentEncodedQueryString(query: APIRequestQuery) -> String? {
+    let components = NSURLComponents()
+    components.queryItems = NSURLQueryItem.queryItems(query)
+    return components.percentEncodedQuery
+}
+
+extension NSURLQueryItem {
+    static func queryItems(query: APIRequestQuery) -> [NSURLQueryItem]? {
+        if query.count > 0 {
+            return query.map { NSURLQueryItem(name: $0, value: $1) }
+        }
+        return nil
+    }
+}
+
 /**
 Process APIRequest and returns NSURLRequest.
 */

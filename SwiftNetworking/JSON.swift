@@ -14,14 +14,10 @@ public protocol JSONDecodable {
     init?(jsonDictionary: JSONDictionary?)
 }
 
-public protocol JSONArrayConvertible: JSONDecodable, JSONEncodable {
-    static var jsonArrayRootKey: String? { get }
-    static var paginationMetadataKey: String? { get }
-}
+public protocol JSONConvertible: JSONDecodable, JSONEncodable {}
 
-extension JSONArrayConvertible {
-    static var jsonArrayRootKey: String? { return nil }
-    static var paginationMetadataKey: String? { return nil }
+public protocol JSONArrayConvertible: JSONConvertible {
+    static var jsonArrayRootKey: String { get }
 }
 
 public protocol JSONEncodable {
@@ -36,7 +32,7 @@ public struct JSONArray: APIResponseDecodable, APIRequestDataEncodable {
     public let value: [JSONDictionary]
 }
 
-public struct JSONArrayOf<T: JSONArrayConvertible>: APIResponseDecodable, APIRequestDataEncodable {
+public struct JSONArrayOf<T: JSONConvertible>: APIResponseDecodable, APIRequestDataEncodable {
     public let value: [T]
     
     public init(_ value: [T]) {
@@ -101,21 +97,21 @@ extension JSONArray {
 extension JSONArrayOf {
     
     public init?(apiResponseData: NSData) throws {
-        var array: [JSONDictionary]
-        if let key = T.jsonArrayRootKey {
-            guard let jsonDictionary: JSONDictionary = try apiResponseData.decodeToJSON(),
-                jsonArray = jsonDictionary[key] as? [JSONDictionary] else {
-                    return nil
-            }
-            array = jsonArray
+        guard let jsonArray: [JSONDictionary] = try apiResponseData.decodeToJSON() else {
+            return nil
         }
-        else {
-            guard let jsonArray: [JSONDictionary] = try apiResponseData.decodeToJSON() else {
-                    return nil
-            }
-            array = jsonArray
+        self = JSONArrayOf<T>(jsonArray.flatMap { T(jsonDictionary: $0) })
+    }
+}
+
+extension JSONArrayOf where T: JSONArrayConvertible {
+
+    public init?(apiResponseData: NSData) throws {
+        guard let jsonDictionary: JSONDictionary = try apiResponseData.decodeToJSON(),
+            jsonArray = jsonDictionary[T.jsonArrayRootKey] as? [JSONDictionary] else {
+                return nil
         }
-        self = JSONArrayOf<T>(array.flatMap { T(jsonDictionary: $0) })
+        self = JSONArrayOf<T>(jsonArray.flatMap { T(jsonDictionary: $0) })
     }
 }
 
@@ -136,30 +132,16 @@ extension JSONArray {
 
 extension JSONArrayOf {
     public func encodeForAPIRequestData() throws -> NSData {
-        if let key = T.jsonArrayRootKey {
-            return try encodeJSONDictionary([key: value.map({$0.jsonDictionary})])
-        }
-        else {
-            return try encodeJSONArray(value.map({$0.jsonDictionary}))
-        }
+        return try encodeJSONArray(value.map({$0.jsonDictionary}))
     }
 }
 
-
-public func percentEncodedQueryString(query: APIRequestQuery) -> String? {
-    let components = NSURLComponents()
-    components.queryItems = NSURLQueryItem.queryItems(query)
-    return components.percentEncodedQuery
-}
-
-extension NSURLQueryItem {
-    static func queryItems(query: APIRequestQuery) -> [NSURLQueryItem]? {
-        if query.count > 0 {
-            return query.map { NSURLQueryItem(name: $0, value: $1) }
-        }
-        return nil
+extension JSONArrayOf where T: JSONArrayConvertible {
+    public func encodeForAPIRequestData() throws -> NSData {
+        return try encodeJSONDictionary([T.jsonArrayRootKey: value.map({$0.jsonDictionary})])
     }
 }
+
 
 //MARK: - NSData
 

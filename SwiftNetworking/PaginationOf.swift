@@ -8,6 +8,10 @@
 
 import Foundation
 
+public protocol Paginatable: JSONArrayConvertible {
+    static var paginationMetadataKey: String { get }
+}
+
 public protocol PaginationMetadata: JSONDecodable {
     var page: Int {get}
     var limit: Int {get}
@@ -17,11 +21,11 @@ public protocol PaginationMetadata: JSONDecodable {
     func prevPage() -> Self?
 }
 
-public struct PaginationOf<T: JSONArrayConvertible, M: PaginationMetadata>: JSONDecodable, APIResponseDecodable {
+public struct PaginationOf<T: Paginatable, M: PaginationMetadata>: JSONDecodable, APIResponseDecodable {
     public var items: [T]
-    public var pagination: PaginationMetadata?
+    public var pagination: M?
     
-    private init(items: [T] = [], pagination: PaginationMetadata?) {
+    private init(items: [T] = [], pagination: M?) {
         self.items = items
         self.pagination = pagination
     }
@@ -45,32 +49,14 @@ public struct PaginationOf<T: JSONArrayConvertible, M: PaginationMetadata>: JSON
     }
 }
 
-struct PaginationKeys {
-    private static let meta = "meta"
-    private static let pagination = "pagination"
-    private static let page = "page"
-    private static let limit = "limit"
-    private static let pages = "pages"
-    private static let total = "total"
-    private static let next = "next"
-    private static let prev = "prev"
-}
-
 //MARK: - JSONDecodable
 extension PaginationOf {
     
     public init?(jsonDictionary: JSONDictionary?) {
-        guard let _ = T.jsonArrayRootKey else {
-            fatalError("\(T.self) can not be used in PaginationOf as it returns nil from jsonArrayRootKey.")
-        }
-        guard let _ = T.paginationMetadataKey else {
-            fatalError("\(T.self) can not be used in PaginationOf as it returns nil from paginationMetadataKey.")
-        }
-        
         guard let
             jsonDictionary = jsonDictionary,
-            itemsArray = jsonDictionary[T.jsonArrayRootKey!].array,
-            paginationMetadata = jsonDictionary[T.paginationMetadataKey!].dict
+            itemsArray = jsonDictionary[T.jsonArrayRootKey].array,
+            paginationMetadata = jsonDictionary[T.paginationMetadataKey].dict
             else
         {
             return nil
