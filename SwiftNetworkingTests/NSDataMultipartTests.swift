@@ -109,7 +109,8 @@ class NSDataMultipartTests: XCTestCase {
         // then
         let components = multipartData.componentsSeparatedByData(separator)
         XCTAssertEqual(components.count, 3);
-        XCTAssertEqual(components.last!, "--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!);
+        let expectedLastComponentData = "--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!
+        XCTAssertTrue(components.last!.isEqualToData(expectedLastComponentData))
         let itemsData = components[0...1];
         for (index, itemData) in itemsData.enumerate() {
             let lines = itemData.lines()
