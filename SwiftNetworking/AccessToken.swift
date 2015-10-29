@@ -59,14 +59,14 @@ extension AccessToken {
     }
     public init?(jsonDictionary: JSONDictionary?) {
         guard
-            let jsonDictionary  = jsonDictionary,
-            let token           = jsonDictionary[Keys.token].string,
-            let type            = jsonDictionary[Keys.type].string,
-            let expires         = jsonDictionary[Keys.expires].double
+            let json = JSONObject(jsonDictionary),
+            let token = json[Keys.token] as? String,
+            let type = json[Keys.type] as? String,
+            let expires = json[Keys.expires] as? Double
             else {
                 return nil
         }
-        let refresh = jsonDictionary[Keys.refresh] as? String
+        let refresh = json[Keys.refresh] as? String
         self.init(type: type, token: token, refresh: refresh, expires: NSDate(timeIntervalSinceNow: expires))
     }
 }

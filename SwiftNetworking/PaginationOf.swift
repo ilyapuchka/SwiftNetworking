@@ -58,16 +58,12 @@ extension PaginationOf {
         }
         
         guard let
-            jsonDictionary = jsonDictionary,
-            itemsArray = jsonDictionary[jsonArrayRootKey].array,
-            paginationMetadata = jsonDictionary[T.paginationMetadataKey].dict
-        else
-        {
+            json = JSONObject(jsonDictionary),
+            items: [T] = json.keyPath(jsonArrayRootKey),
+            pagination: M = json.keyPath(T.paginationMetadataKey)
+        else {
             return nil
         }
-        
-        let items = itemsArray.flatMap {T(jsonDictionary: $0)}
-        let pagination = M(jsonDictionary: paginationMetadata)
         self.init(items: items, pagination: pagination)
     }
 }
