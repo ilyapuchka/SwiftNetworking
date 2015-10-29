@@ -17,131 +17,34 @@ public protocol JSONDecodable {
 public protocol JSONConvertible: JSONDecodable, JSONEncodable {}
 
 public protocol JSONArrayConvertible: JSONConvertible {
-    static var jsonArrayRootKey: String { get }
+    //having nil is a workround for but with extensions rdar://23314307
+    //when it's fixed there should be extension of JSONArrayOf where T: JSONArrayConvertible
+    static var jsonArrayRootKey: String? { get }
 }
 
 public protocol JSONEncodable {
     var jsonDictionary: JSONDictionary { get }
 }
 
-public struct JSONObject: APIResponseDecodable, APIRequestDataEncodable {
+public struct JSONObject {
     public let value: JSONDictionary
+    
+    public init(_ value: JSONDictionary) {
+        self.value = value
+    }
 }
 
-public struct JSONArray: APIResponseDecodable, APIRequestDataEncodable {
+public struct JSONArray {
     public let value: [JSONDictionary]
 }
 
-public struct JSONArrayOf<T: JSONConvertible>: APIResponseDecodable, APIRequestDataEncodable {
+public struct JSONArrayOf<T: JSONArrayConvertible> {
     public let value: [T]
     
     public init(_ value: [T]) {
         self.value = value
     }
 }
-
-//MARK: - APIResponseDecodable
-extension JSONObject {
-    
-    public init?(apiResponseData: NSData) throws {
-        guard let result = try apiResponseData.decodeToJSON().map({JSONObject(value: $0)}) else {
-            return nil
-        }
-        self = result
-    }
-    
-    subscript(keyPath: String) -> AnyObject? {
-        var paths = keyPath.componentsSeparatedByString(".")
-        if paths.count == 1 {
-            return value[keyPath]
-        }
-        else {
-            var result = value[paths.removeAtIndex(0)] as? JSONDictionary
-            while paths.count > 1 && result != nil {
-                result = result?[paths.removeAtIndex(0)] as? JSONDictionary
-            }
-            return result?[paths.last!]
-        }
-    }
-    
-}
-
-public protocol JSONValue: APIResponseDecodable {}
-
-extension JSONValue {
-    public init?(apiResponseData: NSData) throws {
-        guard let result: AnyObject = try apiResponseData.decodeToJSON() else {
-            return nil
-        }
-        if let result = result as? Self {
-            self = result
-        }
-        else {
-            return nil
-        }
-    }
-}
-
-extension String: JSONValue {}
-
-extension JSONArray {
-    
-    public init?(apiResponseData: NSData) throws {
-        guard let result = try apiResponseData.decodeToJSON().map({JSONArray(value: $0)}) else {
-            return nil
-        }
-        self = result
-    }
-}
-
-extension JSONArrayOf {
-    
-    public init?(apiResponseData: NSData) throws {
-        guard let jsonArray: [JSONDictionary] = try apiResponseData.decodeToJSON() else {
-            return nil
-        }
-        self = JSONArrayOf<T>(jsonArray.flatMap { T(jsonDictionary: $0) })
-    }
-}
-
-extension JSONArrayOf where T: JSONArrayConvertible {
-
-    public init?(apiResponseData: NSData) throws {
-        guard let jsonDictionary: JSONDictionary = try apiResponseData.decodeToJSON(),
-            jsonArray = jsonDictionary[T.jsonArrayRootKey] as? [JSONDictionary] else {
-                return nil
-        }
-        self = JSONArrayOf<T>(jsonArray.flatMap { T(jsonDictionary: $0) })
-    }
-}
-
-
-
-//MARK: - APIRequestDataEncodable
-extension JSONObject {
-    public func encodeForAPIRequestData() throws -> NSData {
-        return try encodeJSONDictionary(value)
-    }
-}
-
-extension JSONArray {
-    public func encodeForAPIRequestData() throws -> NSData {
-        return try encodeJSONArray(value)
-    }
-}
-
-extension JSONArrayOf {
-    public func encodeForAPIRequestData() throws -> NSData {
-        return try encodeJSONArray(value.map({$0.jsonDictionary}))
-    }
-}
-
-extension JSONArrayOf where T: JSONArrayConvertible {
-    public func encodeForAPIRequestData() throws -> NSData {
-        return try encodeJSONDictionary([T.jsonArrayRootKey: value.map({$0.jsonDictionary})])
-    }
-}
-
 
 //MARK: - NSData
 
@@ -191,9 +94,6 @@ public func encodeJSONObjectsArray(objects: [JSONEncodable]) throws -> NSData {
 private func serializeJSON(obj: AnyObject) throws -> NSData {
     return try NSJSONSerialization.dataWithJSONObject(obj, options: NSJSONWritingOptions())
 }
-
-public let JSONHeaders = [HTTPHeader.ContentType(HTTPContentType.JSON), HTTPHeader.Accept([HTTPContentType.JSON])]
-
 
 extension Optional {
     public var string: String? {

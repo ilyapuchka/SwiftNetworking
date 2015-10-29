@@ -53,11 +53,15 @@ public struct PaginationOf<T: Paginatable, M: PaginationMetadata>: JSONDecodable
 extension PaginationOf {
     
     public init?(jsonDictionary: JSONDictionary?) {
+        guard let jsonArrayRootKey = T.jsonArrayRootKey else {
+            fatalError("Paginatable resource should provide non-nil jsonArrayRootKey.")
+        }
+        
         guard let
             jsonDictionary = jsonDictionary,
-            itemsArray = jsonDictionary[T.jsonArrayRootKey].array,
+            itemsArray = jsonDictionary[jsonArrayRootKey].array,
             paginationMetadata = jsonDictionary[T.paginationMetadataKey].dict
-            else
+        else
         {
             return nil
         }
