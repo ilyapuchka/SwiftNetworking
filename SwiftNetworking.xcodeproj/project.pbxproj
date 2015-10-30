@@ -25,6 +25,7 @@
 		0967AE401BA8BA72008526B0 /* NSDataMultipartTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0967AE3D1BA8BA72008526B0 /* NSDataMultipartTests.swift */; };
 		0967AE411BA8BA72008526B0 /* SwiftNetworkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0967AE3E1BA8BA72008526B0 /* SwiftNetworkingTests.swift */; };
 		099E89B61B89BD0E005972F0 /* SwiftNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 099E89AB1B89BD0E005972F0 /* SwiftNetworking.framework */; };
+		09F197581BE3959E00CFE777 /* JSON+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F197571BE3959E00CFE777 /* JSON+API.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		0967AE3E1BA8BA72008526B0 /* SwiftNetworkingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftNetworkingTests.swift; sourceTree = "<group>"; };
 		099E89AB1B89BD0E005972F0 /* SwiftNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		099E89B51B89BD0E005972F0 /* SwiftNetworkingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftNetworkingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		09F197571BE3959E00CFE777 /* JSON+API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JSON+API.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 				0967AE1B1BA8BA49008526B0 /* APIResponseProcessing.swift */,
 				0967AE1C1BA8BA49008526B0 /* Errors.swift */,
 				0967AE1E1BA8BA49008526B0 /* JSON.swift */,
+				09F197571BE3959E00CFE777 /* JSON+API.swift */,
 				0967AE1F1BA8BA49008526B0 /* NetworkSession.swift */,
 				0967AE201BA8BA49008526B0 /* NSData+Multipart.swift */,
 				0967AE211BA8BA49008526B0 /* PaginationOf.swift */,
@@ -247,6 +250,7 @@
 				0967AE2F1BA8BA49008526B0 /* NetworkSession.swift in Sources */,
 				0967AE241BA8BA49008526B0 /* AccessToken.swift in Sources */,
 				0967AE271BA8BA49008526B0 /* APIRequestProcessing.swift in Sources */,
+				09F197581BE3959E00CFE777 /* JSON+API.swift in Sources */,
 				0967AE311BA8BA49008526B0 /* PaginationOf.swift in Sources */,
 				0967AE2B1BA8BA49008526B0 /* APIResponseProcessing.swift in Sources */,
 				0967AE261BA8BA49008526B0 /* APIRequest.swift in Sources */,
