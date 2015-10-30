@@ -17,58 +17,60 @@ public protocol JSONDecodable {
 public protocol JSONConvertible: JSONDecodable, JSONEncodable {}
 
 public protocol JSONArrayConvertible: JSONConvertible {
-    //having nil is a workround for but with extensions rdar://23314307
+    //having nil is a workround for bug with extensions rdar://23314307
     //when it's fixed there should be extension of JSONArrayOf where T: JSONArrayConvertible
-    static var jsonArrayRootKey: String? { get }
+    //but it actually can make sence if array of objects is root objecti in json
+    static var itemsKey: String? { get }
 }
 
 public protocol JSONEncodable {
     var jsonDictionary: JSONDictionary { get }
 }
 
-public struct JSONObject {
-    public let value: JSONDictionary
+public protocol JSONContainer {
+    typealias Element
+    
+    var value: Element {get set}
+    
+    init(_ value: Element)
+    init?(_ value: Element?)
+}
+
+extension JSONContainer {
+    public init?(_ value: Element?) {
+        guard let value = value else { return nil }
+        self.init(value)
+    }
+}
+
+public struct JSONObject: JSONContainer {
+    public var value: JSONDictionary
     
     public init(_ value: JSONDictionary) {
         self.value = value
     }
+}
+
+public struct JSONArray: JSONContainer {
+    public var value: [JSONDictionary]
     
-    public init?(_ value: JSONDictionary?) {
-        if let value = value {
-            self.init(value)
-        }
-        else {
-            return nil
-        }
+    public init(_ value: [JSONDictionary]) {
+        self.value = value
     }
-
 }
 
-public struct JSONArray {
-    public let value: [JSONDictionary]
-}
-
-public struct JSONArrayOf<T: JSONArrayConvertible> {
-    public let value: [T]
+public struct JSONArrayOf<T: JSONArrayConvertible>: JSONContainer {
+    public var value: [T]
     
     public init(_ value: [T]) {
         self.value = value
     }
 }
 
-extension String: JSONValue {}
-extension IntegerLiteralType: JSONValue {}
-extension FloatLiteralType: JSONValue {}
-extension BooleanLiteralType: JSONValue {}
-extension JSONArray: JSONValue {}
-
 //MARK: - Subscript
 extension JSONObject: DictionaryLiteralConvertible {
     
-    public typealias Key = String
-    public typealias Value = AnyObject
-    
-    public init(dictionaryLiteral elements: (Key, Value)...) {
+    public init(dictionaryLiteral elements: (String, AnyObject)...) {
         self.init(elements.reduce([:]) { (var r, i) in
             r[i.0] = i.1
             return r
@@ -95,27 +97,21 @@ extension JSONObject: DictionaryLiteralConvertible {
 
     public func keyPath<T>(keyPath: String) -> T? {
         guard let paths = partitionKeyPath(keyPath) else { return nil }
-        
-        if paths.count == 1 {
-            return value[keyPath] as? T
-        }
-        else {
-            return resolve(paths) as? T
-        }
+        return (paths.count == 1 ? value[keyPath] : resolve(paths)) as? T
     }
     
     private func partitionKeyPath(keyPath: String) -> [String]? {
         var paths = keyPath.componentsSeparatedByString(".")
         var key: String!
-        var resolvedPaths = [String]()
+        var partitionedPaths = [String]()
         repeat {
             key = paths.removeFirst()
             if key.hasPrefix("@") && paths.count > 0 {
                 key = "\(key).\(paths.removeFirst())"
             }
-            resolvedPaths += [key]
+            partitionedPaths += [key]
         } while paths.count > 0
-        return resolvedPaths
+        return partitionedPaths
     }
     
     private func resolve(var keyPaths: [String]) -> AnyObject? {

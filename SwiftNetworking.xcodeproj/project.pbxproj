@@ -19,7 +19,7 @@
 		0967AE2E1BA8BA49008526B0 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0967AE1E1BA8BA49008526B0 /* JSON.swift */; };
 		0967AE2F1BA8BA49008526B0 /* NetworkSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0967AE1F1BA8BA49008526B0 /* NetworkSession.swift */; };
 		0967AE301BA8BA49008526B0 /* NSData+Multipart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0967AE201BA8BA49008526B0 /* NSData+Multipart.swift */; };
-		0967AE311BA8BA49008526B0 /* PaginationOf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0967AE211BA8BA49008526B0 /* PaginationOf.swift */; };
+		0967AE311BA8BA49008526B0 /* Pagination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0967AE211BA8BA49008526B0 /* Pagination.swift */; };
 		0967AE321BA8BA49008526B0 /* SwiftNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 0967AE221BA8BA49008526B0 /* SwiftNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0967AE331BA8BA49008526B0 /* TasksScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0967AE231BA8BA49008526B0 /* TasksScheduler.swift */; };
 		0967AE401BA8BA72008526B0 /* NSDataMultipartTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0967AE3D1BA8BA72008526B0 /* NSDataMultipartTests.swift */; };
@@ -52,7 +52,7 @@
 		0967AE1E1BA8BA49008526B0 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
 		0967AE1F1BA8BA49008526B0 /* NetworkSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkSession.swift; sourceTree = "<group>"; };
 		0967AE201BA8BA49008526B0 /* NSData+Multipart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+Multipart.swift"; sourceTree = "<group>"; };
-		0967AE211BA8BA49008526B0 /* PaginationOf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaginationOf.swift; sourceTree = "<group>"; };
+		0967AE211BA8BA49008526B0 /* Pagination.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pagination.swift; sourceTree = "<group>"; };
 		0967AE221BA8BA49008526B0 /* SwiftNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwiftNetworking.h; sourceTree = "<group>"; };
 		0967AE231BA8BA49008526B0 /* TasksScheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TasksScheduler.swift; sourceTree = "<group>"; };
 		0967AE3C1BA8BA72008526B0 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -99,7 +99,7 @@
 				09F197571BE3959E00CFE777 /* JSON+API.swift */,
 				0967AE1F1BA8BA49008526B0 /* NetworkSession.swift */,
 				0967AE201BA8BA49008526B0 /* NSData+Multipart.swift */,
-				0967AE211BA8BA49008526B0 /* PaginationOf.swift */,
+				0967AE211BA8BA49008526B0 /* Pagination.swift */,
 				0967AE231BA8BA49008526B0 /* TasksScheduler.swift */,
 				0967AE1D1BA8BA49008526B0 /* Info.plist */,
 			);
@@ -251,7 +251,7 @@
 				0967AE241BA8BA49008526B0 /* AccessToken.swift in Sources */,
 				0967AE271BA8BA49008526B0 /* APIRequestProcessing.swift in Sources */,
 				09F197581BE3959E00CFE777 /* JSON+API.swift in Sources */,
-				0967AE311BA8BA49008526B0 /* PaginationOf.swift in Sources */,
+				0967AE311BA8BA49008526B0 /* Pagination.swift in Sources */,
 				0967AE2B1BA8BA49008526B0 /* APIResponseProcessing.swift in Sources */,
 				0967AE261BA8BA49008526B0 /* APIRequest.swift in Sources */,
 				0967AE331BA8BA49008526B0 /* TasksScheduler.swift in Sources */,

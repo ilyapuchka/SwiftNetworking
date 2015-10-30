@@ -11,10 +11,7 @@ import Foundation
 extension JSONObject: APIResponseDecodable, APIRequestDataEncodable {
     
     public init?(apiResponseData: NSData) throws {
-        guard let result = try apiResponseData.decodeToJSON().map({JSONObject($0)}) else {
-            return nil
-        }
-        self = result
+        self.init(try apiResponseData.decodeToJSON())
     }
     
     public func encodeForAPIRequestData() throws -> NSData {
@@ -26,10 +23,7 @@ extension JSONObject: APIResponseDecodable, APIRequestDataEncodable {
 extension JSONArray: APIResponseDecodable, APIRequestDataEncodable {
     
     public init?(apiResponseData: NSData) throws {
-        guard let result = try apiResponseData.decodeToJSON().map({JSONArray(value: $0)}) else {
-            return nil
-        }
-        self = result
+        self.init(try apiResponseData.decodeToJSON())
     }
 
     public func encodeForAPIRequestData() throws -> NSData {
@@ -42,7 +36,7 @@ extension JSONArrayOf: APIResponseDecodable, APIRequestDataEncodable {
     
     public init?(apiResponseData: NSData) throws {
         let jsonArray: [JSONDictionary]
-        if let jsonArrayRootKey = T.jsonArrayRootKey {
+        if let jsonArrayRootKey = T.itemsKey {
             guard let jsonDictionary: JSONDictionary = try apiResponseData.decodeToJSON(),
                 _jsonArray = jsonDictionary[jsonArrayRootKey] as? [JSONDictionary] else {
                     return nil
@@ -59,7 +53,7 @@ extension JSONArrayOf: APIResponseDecodable, APIRequestDataEncodable {
     }
 
     public func encodeForAPIRequestData() throws -> NSData {
-        if let jsonArrayRootKey = T.jsonArrayRootKey {
+        if let jsonArrayRootKey = T.itemsKey {
             return try encodeJSONDictionary([jsonArrayRootKey: value.map({$0.jsonDictionary})])
         }
         else {
@@ -85,6 +79,14 @@ extension JSONValue {
         }
     }
 }
+
+extension String: JSONValue {}
+extension IntegerLiteralType: JSONValue {}
+extension FloatLiteralType: JSONValue {}
+extension BooleanLiteralType: JSONValue {}
+extension JSONArray: JSONValue {}
+extension JSONObject: JSONValue {}
+
 
 public let JSONHeaders = [HTTPHeader.ContentType(HTTPContentType.JSON), HTTPHeader.Accept([HTTPContentType.JSON])]
 
