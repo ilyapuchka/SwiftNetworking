@@ -67,14 +67,22 @@ public struct JSONArrayOf<T: JSONArrayConvertible>: JSONContainer {
     }
 }
 
+extension Dictionary {
+    mutating func append(element: (Key, Value)) -> [Key:Value] {
+        self[element.0] = element.1
+        return self
+    }
+}
+
+func +<K: Hashable,V>(var lhs: [K: V], rhs: (K, V)) -> [K: V] {
+    return lhs.append(rhs)
+}
+
 //MARK: - Subscript
 extension JSONObject: DictionaryLiteralConvertible {
     
     public init(dictionaryLiteral elements: (String, AnyObject)...) {
-        self.init(elements.reduce([:]) { (var r, i) in
-            r[i.0] = i.1
-            return r
-        })
+        self.init(elements.reduce([:]) { $0 + $1 })
     }
     
     public subscript(keyPaths: String...) -> AnyObject? {
