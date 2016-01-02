@@ -247,6 +247,10 @@ extension Optional {
         return self as? Swift.Int
     }
     
+    public var Bool: Swift.Bool? {
+        return self as? Swift.Bool
+    }
+    
     public var Array: [JSONDictionary]? {
         return self as? [JSONDictionary]
     }

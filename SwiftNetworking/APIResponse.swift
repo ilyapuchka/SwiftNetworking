@@ -43,6 +43,27 @@ public struct APIResponseOf<ResultType: APIResponseDecodable>: APIResponse {
             return httpResponse?.MIMEType.flatMap {HTTPContentType(rawValue: $0)}
         }
     }
+    
+    public func map<T>(f: ResultType -> T) -> APIResponseOf<T> {
+        return flatMap(f)
+    }
+    
+    public func mapError<E: ErrorType>(f: ErrorType -> E) -> APIResponseOf {
+        return flatMapError(f)
+    }
+    
+    public func flatMap<T>(f: ResultType -> T?) -> APIResponseOf<T> {
+        var response = APIResponseOf<T>(request: originalRequest, data: data, httpResponse: httpResponse, error: error)
+        response.result = result.flatMap(f)
+        return response
+    }
+    
+    public func flatMapError<E: ErrorType>(f: ErrorType -> E?) -> APIResponseOf {
+        var response = APIResponseOf(request: originalRequest, data: data, httpResponse: httpResponse, error: error.flatMap(f) ?? error)
+        response.result = result
+        return response
+    }
+
 }
 
 public struct None: APIResponseDecodable {
